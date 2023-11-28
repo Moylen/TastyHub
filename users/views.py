@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View
 from .forms import UserRegistrationForm, UserLoginForm
-from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse
+from django.contrib.auth import login, logout
 
 # Create your views here.
+
 
 class UserRegistrationView(View):
     @staticmethod
@@ -31,7 +31,7 @@ class UserLoginView(View):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return HttpResponse('<h1>Logged</h1>')
+            return redirect('index')
         return render(request, 'users/login.html', {'form': form})
     
 

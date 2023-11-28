@@ -1,16 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h2>{{ form.errors }}</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">Login</button>
-    </form>
-</body>
-</html>
+{% extends 'restaurants/base.html' %}
+{% load static %}
+
+{% block title %} Вход {% endblock %}
+
+{% block content %}
+<main class="flex-grow-1 flex-shrink-0">
+    <div class="container-fluid d-flex justify-content-center h-100">
+        <form class="custom-form d-flex flex-column justify-content-center" method="post"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="d-flex justify-content-center mb-3">
+                <h1>Вход</h1>
+            </div>
+            
+            {#Error handling#}
+            {% if form.errors %}
+                <div class="alert alert-danger d-flex justify-content-center" role="alert">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            {{ error }}<br>
+                        {% endfor %}
+                    {% endfor %}
+                    
+                    {% for error in form.non_field_errors %}
+                        {{ error }}<br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {# End error handling #}
+
+            <div class="form-group mb-3">
+                {{ form.username }}
+            </div>
+            <div class="form-group mb-3">
+                {{ form.password }}
+            </div>
+            <div class="mb-3">
+                <button class="btn btn-outline-dark w-100" type="submit">Войти</button>
+            </div>
+            <div class="d-flex justify-content-center">
+                <h6>Нет аккаунта?
+                    <a class="text-decoration-none" href="{% url 'registration' %}">Зарегистрироваться</a>
+                </h6>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}
