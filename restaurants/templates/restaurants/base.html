@@ -24,6 +24,9 @@
                                 <div class="nav-item">
                                     <a class="nav-link active" href="#">Личный кабинет</a>
                                 </div>
+                                <div class="nav-item">
+                                    <a class="nav-link active" href="{% url 'logout' %}">Выйти</a>
+                                </div>
                             {% else %}
                                 <div class="nav-item">
                                     <a class="nav-link active" href="{% url 'registration' %}">Регистрация</a>
@@ -39,6 +42,7 @@
         </header>
         {% block content %}
         {% endblock %}
+    </div>
 </body>
 {% block script %}
 {% endblock %}
