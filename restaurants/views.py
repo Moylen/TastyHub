@@ -34,4 +34,4 @@ class RestaurantPage(View):
     @staticmethod
     def get(request, pk):
         restaurant = Restaurant.objects.get(pk=pk)
-        return render(request, 'restaurants/restaurant_page.html', {'restaurant': restaurant})
+        return render(request, 'restaurants/booking_page.html', {'restaurant': restaurant})

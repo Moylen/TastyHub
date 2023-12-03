@@ -1,0 +1,107 @@
+* {
+    box-sizing: border-box;
+}
+
+.hall-schema {
+    position: relative;
+    border: 1px solid #000;
+    height: 500px;
+    width: 1200px;
+}
+
+.table {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    border: 1px solid #000;
+    cursor: pointer;
+}
+
+/*Тип стола*/
+
+.table-small {
+    width: 50px;
+    height: 50px;
+}
+
+.table-medium {
+    width: 100px;
+    height: 50px;
+}
+
+.table-large {
+    width: 150px;
+    height: 50px;
+}
+
+.table-medium-vertical {
+    width: 50px;
+    height: 100px;
+}
+
+.table-large-vertical {
+    width: 50px;
+    height: 150px;
+}
+
+/*Статус стола*/
+
+.table.free {
+    background-color: green;
+    color: white;
+}
+
+.table.occupied {
+    background-color: red;
+    color: white;
+}
+
+.table.booked {
+    background-color: orange;
+    color: white;
+}
+
+/*Utils*/
+
+@media (max-width: 768px) {
+    .table-small {
+        width: 33px;
+        height: 33px;
+    }
+
+    .table-medium {
+        width: 66px;
+        height: 33px;
+    }
+
+    .table-large {
+        width: 100px;
+        height: 33px;
+    }
+
+    .hall-schema {
+        height: 300px;
+    }
+}
+
+@media (max-width: 512px) {
+    .table-small {
+        width: 20px;
+        height: 20px;
+    }
+
+    .table-medium {
+        width: 40px;
+        height: 20px;
+    }
+
+    .table-large {
+        width: 60px;
+        height: 20px;
+    }
+
+    .hall-schema {
+        height: 250px;
+    }
+}

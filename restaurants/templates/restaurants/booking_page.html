@@ -1,0 +1,28 @@
+{% extends 'restaurants/base.html' %}
+
+{% load static %}
+
+{% block title %} {{ restaurant.name }} {% endblock %}
+
+{% block content %}
+    <main class="flex-grow-1 flex-shrink-0">
+        <div class="container-fluid d-flex justify-content-center align-items-center h-100">
+            <div class="hall-schema">
+                <div class="table table-small booked" style="top: 10%; left: 5%">1</div>
+                <div class="table table-small free" style="top: 30%; left: 5%">2</div>
+                <div class="table table-small booked" style="top: 50%; left: 5%">3</div>
+                <div class="table table-small free" style="top: 70%; left: 5%">4</div>
+
+                <div class="table table-medium free" style="top: 70%; left: 20%">5</div>
+                <div class="table table-medium free" style="top: 70%; left: 35%">6</div>
+                <div class="table table-medium free" style="top: 70%; left: 50%">7</div>
+                <div class="table table-medium occupied" style="top: 70%; left: 65%">8</div>
+                <div class="table table-medium free" style="top: 70%; left: 80%">9</div>
+
+                <div class="table table-large free" style="top: 30%; left: 20%">10</div>
+                <div class="table table-large occupied" style="top: 30%; left: 45%">11</div>
+                <div class="table table-large free" style="top: 30%; left: 70%">12</div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
