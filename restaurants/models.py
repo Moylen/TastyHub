@@ -32,27 +32,49 @@ class Restaurant(models.Model):
     admin_user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     kitchen_type = models.ForeignKey(KitchenType, on_delete=models.SET_NULL, null=True)
 
+    def __str__(self):
+        return f'{self.name}'
 
-class RestaurantTable(models.Model):
+
+class RestaurantPlace(models.Model):
     # Тип кресла
     types = [
         ('Мягкий', 'Мягкий'), ('Твердый', 'Твердый')
     ]
 
-    number = models.IntegerField(blank=False, null=False)
+    # Тип стола
+    table_sizes = [
+        ('table-small', 'Маленький'), ('table-medium', 'Средний'), ('table-large', 'Большой'),
+        ('table-medium-vertical', 'Средний (вертикальный)'), ('table-large-vertical', 'Большой (вертикальный)')
+    ]
+
+    # Номер стола в конкретном ресторане
+    local_number = models.IntegerField(default=0, blank=False, null=False)
+
+    # Размер стола
+    table_size = models.CharField(max_length=32, choices=table_sizes, blank=False, null=False)
+
+    # Расположение стола в ресторане
+    location_x = models.FloatField(blank=False, null=False, default=0)
+    location_y = models.FloatField(blank=False, null=False, default=0)
+
+    # Тип сиденья
     type = models.CharField(max_length=16, choices=types, blank=False, null=False)
-    location_x = models.FloatField(blank=False, null=False)
-    location_y = models.FloatField(blank=False, null=False)
-    place_amount = models.IntegerField(blank=False, null=False)
 
+    # Количество мест
+    place_amount = models.IntegerField(blank=False, null=False, default=0)
 
-class RestaurantPlace(models.Model):
-    occupied_in = models.DateTimeField(default=None)  # Если установлено время, то оно занято
-    booked_on = models.DateTimeField(default=None)  # Если установлено время, то оно забронировано
+    # Если установлено время, то оно занято
+    occupied_in = models.TimeField(default=None, blank=True, null=True)
 
-    table = models.ForeignKey(RestaurantTable, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    # Если установлено время, то оно забронировано
+    booked_on = models.TimeField(default=None, blank=True, null=True)
+
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.restaurant.name} | {self.local_number} стол'
 
 
 class RestaurantReview(models.Model):

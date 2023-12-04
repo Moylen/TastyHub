@@ -14,7 +14,8 @@
     align-items: center;
     justify-content: center;
     position: absolute;
-    border: 1px solid #000;
+    border: 1px solid #D5D8DC;
+    border-radius: 10px;
     cursor: pointer;
 }
 
@@ -48,23 +49,23 @@
 /*Статус стола*/
 
 .table.free {
-    background-color: green;
+    background-color: #28B463;
     color: white;
 }
 
 .table.occupied {
-    background-color: red;
+    background-color: #EC7063;
     color: white;
 }
 
 .table.booked {
-    background-color: orange;
+    background-color: #F4D03F;
     color: white;
 }
 
 /*Utils*/
 
-@media (max-width: 768px) {
+@media (max-width: 800px) {
     .table-small {
         width: 33px;
         height: 33px;
@@ -80,12 +81,22 @@
         height: 33px;
     }
 
+    .table-medium-vertical {
+        width: 33px;
+        height: 66px;
+    }
+
+    .table-large-vertical {
+        width: 33px;
+        height: 100px;
+    }
+
     .hall-schema {
-        height: 300px;
+        height: 400px;
     }
 }
 
-@media (max-width: 512px) {
+@media (max-width: 600px) {
     .table-small {
         width: 20px;
         height: 20px;
@@ -99,6 +110,16 @@
     .table-large {
         width: 60px;
         height: 20px;
+    }
+
+    .table-medium-vertical {
+        width: 20px;
+        height: 40px;
+    }
+
+    .table-large-vertical {
+        width: 20px;
+        height: 60px;
     }
 
     .hall-schema {

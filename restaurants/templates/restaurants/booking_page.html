@@ -2,27 +2,183 @@
 
 {% load static %}
 
-{% block title %} {{ restaurant.name }} {% endblock %}
+{% block title %}  {% endblock %}
 
 {% block content %}
     <main class="flex-grow-1 flex-shrink-0">
         <div class="container-fluid d-flex justify-content-center align-items-center h-100">
             <div class="hall-schema">
-                <div class="table table-small booked" style="top: 10%; left: 5%">1</div>
-                <div class="table table-small free" style="top: 30%; left: 5%">2</div>
-                <div class="table table-small booked" style="top: 50%; left: 5%">3</div>
-                <div class="table table-small free" style="top: 70%; left: 5%">4</div>
-
-                <div class="table table-medium free" style="top: 70%; left: 20%">5</div>
-                <div class="table table-medium free" style="top: 70%; left: 35%">6</div>
-                <div class="table table-medium free" style="top: 70%; left: 50%">7</div>
-                <div class="table table-medium occupied" style="top: 70%; left: 65%">8</div>
-                <div class="table table-medium free" style="top: 70%; left: 80%">9</div>
-
-                <div class="table table-large free" style="top: 30%; left: 20%">10</div>
-                <div class="table table-large occupied" style="top: 30%; left: 45%">11</div>
-                <div class="table table-large free" style="top: 30%; left: 70%">12</div>
+                {% for place in restaurant_places %}
+                    {% if place.occupied_in %}
+                        <a data-bs-toggle="modal" data-bs-target="#place-{{ place.id }}">
+                            <div class="table {{ place.table_size }} occupied"
+                                 style="top: {{ place.location_y|stringformat:".2f" }}%;
+                                         left: {{ place.location_x|stringformat:".2f" }}%">
+                                {{ place.local_number }}
+                            </div>
+                        </a>
+                    {% elif place.booked_on %}
+                        <a data-bs-toggle="modal" data-bs-target="#place-{{ place.id }}">
+                            <div class="table {{ place.table_size }} booked"
+                                 style="top: {{ place.location_y|stringformat:".2f" }}%;
+                                         left: {{ place.location_x|stringformat:".2f" }}%">
+                                {{ place.local_number }}
+                            </div>
+                        </a>
+                    {% else %}
+                        <a data-bs-toggle="modal" data-bs-target="#place-{{ place.id }}">
+                            <div class="table {{ place.table_size }} free"
+                                 style="top: {{ place.location_y|stringformat:".2f" }}%;
+                                         left: {{ place.location_x|stringformat:".2f" }}%">
+                                {{ place.local_number }}
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
             </div>
+        </div>
+        <div class="modals">
+            {% for place in restaurant_places %}
+                {% if place.occupied_in %}
+                    <div class="modal fade" id="place-{{ place.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5">Стол №{{ place.local_number }}</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div>
+                                        <label for="place-status" class="form-label">Занятость</label>
+                                        <input type="text" id="place-status" class="form-control mb-2" readonly
+                                               disabled
+                                               value="Занято">
+                                    </div>
+                                    <div>
+                                        <label for="place-seat" class="form-label">Тип сиденья</label>
+                                        <input type="text" id="place-seat" class="form-control mb-2" readonly
+                                               disabled
+                                               value="{{ place.type }}">
+                                    </div>
+                                    <div>
+                                        <label for="place-amount" class="form-label">Количество мест</label>
+                                        <input type="text" id="place-amount" class="form-control mb-2" readonly
+                                               disabled
+                                               value="{{ place.place_amount }}">
+                                    </div>
+                                    <div>
+                                        <label for="place-occupied-in"
+                                               class="form-label">Занято с</label>
+                                        <input type="time" id="place-amount" class="form-control mb-2" readonly
+                                               disabled
+                                               value="{{ place.occupied_in }}">
+                                    </div>
+                                    {#                                    <div class="mt-3 d-flex justify-content-center">#}
+                                    {#                                        <button type="submit" class="btn" disabled>Забронировать#}
+                                    {#                                        </button>#}
+                                    {#                                    </div>#}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% elif place.booked_on %}
+                    <div class="modal fade" id="place-{{ place.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5">Стол №{{ place.local_number }}</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div>
+                                        <label for="place-status" class="form-label">Занятость</label>
+                                        <input type="text" id="place-status" class="form-control mb-2" readonly
+                                               disabled
+                                               value="Забронировано">
+                                    </div>
+                                    <div>
+                                        <label for="place-seat" class="form-label">Тип сиденья</label>
+                                        <input type="text" id="place-seat" class="form-control mb-2" readonly
+                                               disabled
+                                               value="{{ place.type }}">
+                                    </div>
+                                    <div>
+                                        <label for="place-amount" class="form-label">Количество мест</label>
+                                        <input type="text" id="place-amount" class="form-control mb-2" readonly
+                                               disabled
+                                               value="{{ place.place_amount }}">
+                                    </div>
+                                    <div>
+                                        <label for="place-occupied-in"
+                                               class="form-label">Забронировано на</label>
+                                        <input type="time" id="place-amount" class="form-control mb-2" readonly
+                                               disabled
+                                               value="{{ place.booked_on }}">
+                                        <div class="form-text">
+                                            Если через 15 минут стол не будет занят, то станет свободным.
+                                        </div>
+                                    </div>
+                                    {#                                    <div class="mt-3 d-flex justify-content-center">#}
+                                    {#                                        <button type="submit" class="btn" disabled>Забронировать#}
+                                    {#                                        </button>#}
+                                    {#                                    </div>#}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="modal fade" id="place-{{ place.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5">Стол №{{ place.local_number }}</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="post" enctype="multipart/form-data"
+                                          action="{% url 'reserve' place.pk %}">
+                                        {% csrf_token %}
+                                        <div>
+                                            <label for="place-status" class="form-label">Занятость</label>
+                                            <input type="text" id="place-status" class="form-control mb-2"
+                                                   readonly
+                                                   disabled
+                                                   value="Свободно">
+                                        </div>
+                                        <div>
+                                            <label for="place-seat" class="form-label">Тип сиденья</label>
+                                            <input type="text" id="place-seat" class="form-control mb-2"
+                                                   readonly
+                                                   disabled
+                                                   value="{{ place.type }}">
+                                        </div>
+                                        <div>
+                                            <label for="place-amount" class="form-label">Количество мест</label>
+                                            <input type="text" id="place-amount" class="form-control mb-2"
+                                                   readonly
+                                                   disabled
+                                                   value="{{ place.place_amount }}">
+                                        </div>
+                                        <div>
+                                            <label for="{{ BookingForm.booked_on.id_for_label }}"
+                                                   class="form-label">Время бронирования</label>
+                                            {{ BookingForm.booked_on }}
+                                            <div class="form-text">
+                                                Можно выбрать ТОЛЬКО время текущего дня.
+                                            </div>
+                                        </div>
+                                        <div class="mt-3 d-flex justify-content-center">
+                                            <button type="submit" class="btn btn-outline-success">
+                                                Забронировать
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
         </div>
     </main>
 {% endblock %}
