@@ -69,9 +69,9 @@
                                     <div>
                                         <label for="place-occupied-in"
                                                class="form-label">Занято с</label>
-                                        <input type="time" id="place-amount" class="form-control mb-2" readonly
+                                        <input type="time" id="place-occupied-in" class="form-control mb-2" readonly
                                                disabled
-                                               value="{{ place.occupied_in }}">
+                                               value="{{ place.occupied_in|time:"H:i" }}">
                                     </div>
                                     {#                                    <div class="mt-3 d-flex justify-content-center">#}
                                     {#                                        <button type="submit" class="btn" disabled>Забронировать#}
@@ -109,11 +109,11 @@
                                                value="{{ place.place_amount }}">
                                     </div>
                                     <div>
-                                        <label for="place-occupied-in"
+                                        <label for="place-booked-on"
                                                class="form-label">Забронировано на</label>
-                                        <input type="time" id="place-amount" class="form-control mb-2" readonly
+                                        <input type="time" id="place-booked-on" class="form-control mb-2" readonly
                                                disabled
-                                               value="{{ place.booked_on }}">
+                                               value="{{ place.booked_on|time:"H:i" }}">
                                         <div class="form-text">
                                             Если через 15 минут стол не будет занят, то станет свободным.
                                         </div>
