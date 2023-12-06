@@ -6,7 +6,7 @@ from django.contrib.auth import login, logout
 # Create your views here.
 
 
-class UserRegistrationView(View):
+class UserRegistrationPage(View):
     @staticmethod
     def get(request):
         return render(request, 'users/registration.html', {'form': UserRegistrationForm()})
@@ -20,7 +20,7 @@ class UserRegistrationView(View):
         return render(request, 'users/registration.html', {'form': form})
     
 
-class UserLoginView(View):
+class UserLoginPage(View):
     @staticmethod
     def get(request):
         return render(request, 'users/login.html', {'form': UserLoginForm()})

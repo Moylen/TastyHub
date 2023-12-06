@@ -1,10 +1,14 @@
 from datetime import timedelta, datetime
 
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseBadRequest
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import View
+
+from users.forms import UserEditForm
 from .forms import FilterForm, BookingForm
 from .models import Restaurant, RestaurantPlace
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -89,4 +93,53 @@ class Reserve(LoginRequiredMixin, View):
         place.user = request.user
         place.save()
 
-        return HttpResponse('booked')
+        return redirect('profile')
+
+
+class ReserveDelete(LoginRequiredMixin, View):
+    login_url = reverse_lazy('login')
+
+    @staticmethod
+    def get(request, pk):
+        place = RestaurantPlace.objects.get(pk=pk)
+
+        if place.user != request.user:
+            return redirect('profile')
+
+        place.booked_on = None
+        place.user = None
+        place.save()
+
+        return redirect('profile')
+
+
+class ProfilePage(LoginRequiredMixin, View):
+    login_url = reverse_lazy('login')
+
+    @staticmethod
+    def get(request):
+        user_places = RestaurantPlace.objects.filter(user=request.user).order_by('booked_on')
+
+        context = {
+            'user_places': user_places,
+            'UserEditForm': UserEditForm(instance=request.user)
+        }
+        return render(request, 'restaurants/profile.html', context)
+
+    @staticmethod
+    def post(request):
+        form = UserEditForm(request.POST, instance=request.user)
+        if not form.is_valid():
+            return render(request, 'restaurants/profile.html', {'UserEditForm': form})
+
+        user = form.save(commit=False)
+        password = form.cleaned_data.get('password')
+        if password:
+            user.set_password(password)
+        user.save()
+
+        updated_user = authenticate(username=user.username, password=password)
+        if updated_user is not None:
+            login(request, updated_user)
+
+        return redirect('profile')
