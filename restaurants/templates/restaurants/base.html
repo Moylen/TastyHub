@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <title>{% block title %}{% endblock %}</title>
+    <title>TastyHub</title>
 </head>
 <body>
 <div class="d-flex flex-column vh-100">
@@ -20,13 +20,13 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <div class="navbar-nav">
+                        <a class="nav-link active" href="{% url 'index' %}">Рестораны</a>
+                    </div>
                     <div class="navbar-nav ms-auto mb-2 mb-sm-0">
                         {% if user.is_authenticated %}
                             <div class="nav-item">
-                                <a class="nav-link active" href="{% url 'profile' %}">Аккаунт</a>
-                            </div>
-                            <div class="nav-item">
-                                <a class="nav-link active" href="{% url 'logout' %}">Выйти</a>
+                                <a class="nav-link active" href="{% url 'account' %}">Аккаунт</a>
                             </div>
                         {% else %}
                             <div class="nav-item">

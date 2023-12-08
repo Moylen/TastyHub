@@ -2,8 +2,6 @@
 
 {% load bootstrap_icons %}
 
-{% block title %} {% endblock %}
-
 {% block content %}
     <main class="flex-grow-1 flex-shrink-0">
         <div class="container-fluid mt-2 pb-2">
@@ -13,7 +11,7 @@
                         {% csrf_token %}
 
                         <div class="mb-3">
-                            <h2>Личные данные</h2>
+                            <h3 class="display-6">Личные данные</h3>
                         </div>
 
                         {% if UserEditForm.errors %}
@@ -42,27 +40,37 @@
                         <div class="form-group mb-3">
                             {{ UserEditForm.confirm_password }}
                         </div>
-                        <button class="btn btn-outline-success" type="submit">Сохранить</button>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-outline-success" type="submit">Сохранить</button>
+                            <a class="btn btn-outline-danger" href="{% url 'logout' %}">Выйти</a>
+                        </div>
                     </form>
                 </div>
                 <div class="col">
                     <div class="mb-3">
-                        <h2>Брони</h2>
+                        <h3 class="display-6">Брони</h3>
                     </div>
                     {% for place in user_places %}
                         <div class="card mb-3">
                             <div class="card-body d-flex justify-content-between align-items-center">
                                 <div class="d-flex flex-column">
-                                    <span>Ресторан «{{ place.restaurant }}»</span>
-                                    <span>Стол №{{ place.local_number }}</span>
-                                    <span>Время бронирования: {{ place.booked_on }}</span>
+                                    <a href="{% url 'restaurant' place.restaurant.id %}"
+                                       class="text-dark font-monospace">Ресторан
+                                        «{{ place.restaurant }}»</a>
+                                    <span class="font-monospace">Стол №{{ place.local_number }}</span>
+                                    <span class="font-monospace">Время: {{ place.booked_on }}</span>
                                 </div>
                                 <div>
-                                    <a href="{% url 'reserve_delete' place.pk %}">{% bs_icon 'trash' color='black' %}</a>
+                                    <a href="{% url 'setBookedFree' place.pk %}">{% bs_icon 'trash' color='black' %}</a>
                                 </div>
                             </div>
                         </div>
                     {% endfor %}
+                    {% if not user_places %}
+                        <div class="d-flex justify-content-center">
+                            <span class="lead">Не найдено забронированных столиков.</span>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

@@ -26,7 +26,7 @@ class UserRegistrationForm(UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data['email']
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("Этот адрес электронной почты уже занят.")
+            raise forms.ValidationError("Электронная почта уже используется")
         return email
 
     def save(self, commit=True):
@@ -77,7 +77,7 @@ class UserEditForm(forms.ModelForm):
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
         if password != confirm_password:
-            raise forms.ValidationError("Пароли не совпадают.")
+            raise forms.ValidationError("Пароли не совпадают")
         return cleaned_data
 
     def clean_username(self):
@@ -85,5 +85,5 @@ class UserEditForm(forms.ModelForm):
         current_username = self.instance.username
         if new_username != current_username and User.objects.exclude(pk=self.instance.pk).filter(
                 username=new_username).exists():
-            raise forms.ValidationError("Эта почта уже используется.")
+            raise forms.ValidationError("Электронная почта уже используется")
         return new_username

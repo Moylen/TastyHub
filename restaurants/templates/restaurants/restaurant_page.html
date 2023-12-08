@@ -1,0 +1,6 @@
+{% extends 'restaurants/base.html' %}
+
+{% block content %}
+    <a href="{% url 'menu' restaurant.pk %}">Меню</a>
+    <a href="{% url 'booking' restaurant.pk %}">Забронировать стол</a>
+{% endblock %}
