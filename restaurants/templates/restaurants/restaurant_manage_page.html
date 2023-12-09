@@ -3,36 +3,43 @@
 {% block content %}
     <main class="flex-grow-1 flex-shrink-0">
         <div class="container-fluid h-100 mt-2">
-            <div class="mt-2 h-100 d-flex flex-column align-items-center">
-                <h1 class="mt-3 mb-3 display-5">Схема зала {{ restaurant.name }}</h1>
-                <div class="hall-schema">
-                    {% for place in restaurant_places %}
-                        {% if place.occupied_in %}
-                            <a data-bs-toggle="modal" data-bs-target="#place-{{ place.id }}">
-                                <div class="table {{ place.table_size }} occupied"
-                                     style="top: {{ place.location_y|stringformat:".2f" }}%;
-                                             left: {{ place.location_x|stringformat:".2f" }}%">
-                                    {{ place.local_number }}
-                                </div>
-                            </a>
-                        {% elif place.booked_on %}
-                            <a data-bs-toggle="modal" data-bs-target="#place-{{ place.id }}">
-                                <div class="table {{ place.table_size }} booked"
-                                     style="top: {{ place.location_y|stringformat:".2f" }}%;
-                                             left: {{ place.location_x|stringformat:".2f" }}%">
-                                    {{ place.local_number }}
-                                </div>
-                            </a>
-                        {% else %}
-                            <a data-bs-toggle="modal" data-bs-target="#place-{{ place.id }}">
-                                <div class="table {{ place.table_size }} free"
-                                     style="top: {{ place.location_y|stringformat:".2f" }}%;
-                                             left: {{ place.location_x|stringformat:".2f" }}%">
-                                    {{ place.local_number }}
-                                </div>
-                            </a>
-                        {% endif %}
-                    {% endfor %}
+            <div class="w-100 h-100 m-auto" style="max-width: 1200px">
+                <div class="mt-2 h-100 d-flex flex-column align-items-center">
+                    <h1 class="mt-3 mb-3 display-5">Управление залом {{ restaurant.name }}</h1>
+                    <div class="hall-schema">
+                        {% for place in restaurant_places %}
+                            {% if place.occupied_in %}
+                                <a data-bs-toggle="modal" data-bs-target="#place-{{ place.id }}">
+                                    <div class="table {{ place.table_size }} occupied"
+                                         style="top: {{ place.location_y|stringformat:".2f" }}%;
+                                                 left: {{ place.location_x|stringformat:".2f" }}%">
+                                        {{ place.local_number }}
+                                    </div>
+                                </a>
+                            {% elif place.booked_on %}
+                                <a data-bs-toggle="modal" data-bs-target="#place-{{ place.id }}">
+                                    <div class="table {{ place.table_size }} booked"
+                                         style="top: {{ place.location_y|stringformat:".2f" }}%;
+                                                 left: {{ place.location_x|stringformat:".2f" }}%">
+                                        {{ place.local_number }}
+                                    </div>
+                                </a>
+                            {% else %}
+                                <a data-bs-toggle="modal" data-bs-target="#place-{{ place.id }}">
+                                    <div class="table {{ place.table_size }} free"
+                                         style="top: {{ place.location_y|stringformat:".2f" }}%;
+                                                 left: {{ place.location_x|stringformat:".2f" }}%">
+                                        {{ place.local_number }}
+                                    </div>
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="d-flex justify-content-between w-100 gap-1 mt-2">
+                        <a class="btn btn-outline-success" href="{% url 'setAllFree' restaurant.id %}">Освободить
+                            места</a>
+                        <a class="btn btn-outline-danger" href="{% url 'logout' %}">Выйти из аккаунта</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -48,39 +55,50 @@
                                 </div>
                                 <div class="modal-body">
                                     <div>
-                                        <label for="place-status" class="form-label">Занятость</label>
-                                        <input type="text" id="place-status" class="form-control mb-2" readonly
+                                        <label for="place-status-{{ place.id }}"
+                                               class="form-label">Занятость</label>
+                                        <input type="text" id="place-status-{{ place.id }}"
+                                               class="form-control mb-2"
+                                               readonly
                                                disabled
                                                value="Занято">
                                     </div>
                                     <div>
-                                        <label for="place-seat" class="form-label">Тип сиденья</label>
-                                        <input type="text" id="place-seat" class="form-control mb-2" readonly
+                                        <label for="place-seat-{{ place.id }}" class="form-label">Тип
+                                            сиденья</label>
+                                        <input type="text" id="place-seat-{{ place.id }}" class="form-control mb-2"
+                                               readonly
                                                disabled
                                                value="{{ place.type }}">
                                     </div>
                                     <div>
-                                        <label for="place-amount" class="form-label">Количество мест</label>
-                                        <input type="text" id="place-amount" class="form-control mb-2" readonly
+                                        <label for="place-amount-{{ place.id }}" class="form-label">Количество
+                                            мест</label>
+                                        <input type="text" id="place-amount-{{ place.id }}"
+                                               class="form-control mb-2"
+                                               readonly
                                                disabled
                                                value="{{ place.place_amount }}">
                                     </div>
                                     <div>
-                                        <label for="place-user"
+                                        <label for="place-user-{{ place.id }}"
                                                class="form-label">Имя клиента</label>
-                                        <input type="text" id="place-user" class="form-control mb-2" readonly
+                                        <input type="text" id="place-user-{{ place.id }}" class="form-control mb-2"
+                                               readonly
                                                disabled
                                                value="{{ place.user.first_name }}">
                                     </div>
                                     <div>
-                                        <label for="place-occupied-in"
+                                        <label for="place-occupied-in-{{ place.id }}"
                                                class="form-label">Занято с</label>
-                                        <input type="time" id="place-occupied-in" class="form-control mb-2" readonly
+                                        <input type="time" id="place-occupied-in-{{ place.id }}"
+                                               class="form-control mb-2" readonly
                                                disabled
                                                value="{{ place.occupied_in|time:"H:i" }}">
                                     </div>
                                     <div class="mt-3 d-flex justify-content-center">
-                                        <a class="btn btn-outline-success" href="{% url 'setOccupiedFree' place.id %}">
+                                        <a class="btn btn-outline-success"
+                                           href="{% url 'setOccupiedFree' place.id %}">
                                             Освободить
                                         </a>
                                     </div>
@@ -98,40 +116,52 @@
                                 </div>
                                 <div class="modal-body">
                                     <div>
-                                        <label for="place-status" class="form-label">Занятость</label>
-                                        <input type="text" id="place-status" class="form-control mb-2" readonly
+                                        <label for="place-status-{{ place.id }}"
+                                               class="form-label">Занятость</label>
+                                        <input type="text" id="place-status-{{ place.id }}"
+                                               class="form-control mb-2"
+                                               readonly
                                                disabled
                                                value="Забронировано">
                                     </div>
                                     <div>
-                                        <label for="place-seat" class="form-label">Тип сиденья</label>
-                                        <input type="text" id="place-seat" class="form-control mb-2" readonly
+                                        <label for="place-seat-{{ place.id }}" class="form-label">Тип
+                                            сиденья</label>
+                                        <input type="text" id="place-seat-{{ place.id }}" class="form-control mb-2"
+                                               readonly
                                                disabled
                                                value="{{ place.type }}">
                                     </div>
                                     <div>
-                                        <label for="place-amount" class="form-label">Количество мест</label>
-                                        <input type="text" id="place-amount" class="form-control mb-2" readonly
+                                        <label for="place-amount-{{ place.id }}" class="form-label">Количество
+                                            мест</label>
+                                        <input type="text" id="place-amount-{{ place.id }}"
+                                               class="form-control mb-2"
+                                               readonly
                                                disabled
                                                value="{{ place.place_amount }}">
                                     </div>
                                     <div>
-                                        <label for="place-user"
+                                        <label for="place-user-{{ place.id }}"
                                                class="form-label">Имя клиента</label>
-                                        <input type="text" id="place-user" class="form-control mb-2" readonly
+                                        <input type="text" id="place-user-{{ place.id }}" class="form-control mb-2"
+                                               readonly
                                                disabled
                                                value="{{ place.user.first_name }}">
                                     </div>
                                     <div>
-                                        <label for="place-booked-on"
+                                        <label for="place-booked-on-{{ place.id }}"
                                                class="form-label">Забронировано на</label>
-                                        <input type="time" id="place-booked-on" class="form-control mb-2" readonly
+                                        <input type="time" id="place-booked-on-{{ place.id }}"
+                                               class="form-control mb-2"
+                                               readonly
                                                disabled
                                                value="{{ place.booked_on|time:"H:i" }}">
                                     </div>
                                     <div class="d-flex justify-content-between">
                                         <div class="mt-3 d-flex justify-content-center">
-                                            <a class="btn btn-outline-success" href="{% url 'setBookedOccupied' place.id %}">
+                                            <a class="btn btn-outline-success"
+                                               href="{% url 'setBookedOccupied' place.id %}">
                                                 Занять
                                             </a>
                                         </div>
@@ -156,22 +186,27 @@
                                 </div>
                                 <div class="modal-body">
                                     <div>
-                                        <label for="place-status" class="form-label">Занятость</label>
-                                        <input type="text" id="place-status" class="form-control mb-2"
+                                        <label for="place-status-{{ place.id }}"
+                                               class="form-label">Занятость</label>
+                                        <input type="text" id="place-status-{{ place.id }}"
+                                               class="form-control mb-2"
                                                readonly
                                                disabled
                                                value="Свободно">
                                     </div>
                                     <div>
-                                        <label for="place-seat" class="form-label">Тип сиденья</label>
-                                        <input type="text" id="place-seat" class="form-control mb-2"
+                                        <label for="place-seat-{{ place.id }}" class="form-label">Тип
+                                            сиденья</label>
+                                        <input type="text" id="place-seat-{{ place.id }}" class="form-control mb-2"
                                                readonly
                                                disabled
                                                value="{{ place.type }}">
                                     </div>
                                     <div>
-                                        <label for="place-amount" class="form-label">Количество мест</label>
-                                        <input type="text" id="place-amount" class="form-control mb-2"
+                                        <label for="place-amount-{{ place.id }}" class="form-label">Количество
+                                            мест</label>
+                                        <input type="text" id="place-amount-{{ place.id }}"
+                                               class="form-control mb-2"
                                                readonly
                                                disabled
                                                value="{{ place.place_amount }}">
@@ -190,4 +225,10 @@
             {% endfor %}
         </div>
     </main>
+{% endblock %}
+
+{% block script %}
+    <script>
+        document.body.style.overflow = 'hidden';
+    </script>
 {% endblock %}

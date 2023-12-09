@@ -8,7 +8,7 @@ from restaurants.models import Restaurant, RestaurantPlace
 from users.forms import UserEditForm
 
 
-class ProfilePage(LoginRequiredMixin, View):
+class AccountPage(LoginRequiredMixin, View):
     login_url = reverse_lazy('login')
 
     @staticmethod
@@ -18,19 +18,19 @@ class ProfilePage(LoginRequiredMixin, View):
         if restaurant:
             return redirect('manage')
 
-        user_places = RestaurantPlace.objects.filter(user=request.user).order_by('booked_on')
+        user_places = RestaurantPlace.objects.filter(user=request.user).exclude(booked_on=None).order_by('booked_on')
 
         context = {
             'user_places': user_places,
             'UserEditForm': UserEditForm(instance=request.user)
         }
-        return render(request, 'restaurants/profile_page.html', context)
+        return render(request, 'restaurants/account_page.html', context)
 
     @staticmethod
     def post(request):
         form = UserEditForm(request.POST, instance=request.user)
         if not form.is_valid():
-            return render(request, 'restaurants/profile_page.html', {'UserEditForm': form})
+            return render(request, 'restaurants/account_page.html', {'UserEditForm': form})
 
         user = form.save(commit=False)
         password = form.cleaned_data.get('password')

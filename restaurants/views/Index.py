@@ -15,12 +15,15 @@ class Index(View):
 
     @staticmethod
     def post(request):
-        form = FilterForm(request.POST)
+        form = FilterForm(request.POST or None)
         if not form.is_valid():
             return render(request, 'restaurants/index_page.html', {'FilterForm': form})
 
-        kitchen_type = form.cleaned_data['name']
-        restaurants = Restaurant.objects.filter(kitchen_type=kitchen_type)
+        if form.cleaned_data['name'] is None:
+            restaurants = Restaurant.objects.all()
+        else:
+            kitchen_type = form.cleaned_data['name']
+            restaurants = Restaurant.objects.filter(kitchen_type=kitchen_type)
 
         context = {'FilterForm': form, 'restaurants': restaurants}
         return render(request, 'restaurants/index_page.html', context)

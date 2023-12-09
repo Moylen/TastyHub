@@ -8,7 +8,7 @@ class FilterForm(forms.Form):
         empty_label='Все кухни',
         widget=forms.Select(attrs={'class': 'form-control'}),
         label=False,
-        # required=False # Если нужно будет сделать фильтрацию по всем объектам, при empty_label
+        required=False
     )
 
 

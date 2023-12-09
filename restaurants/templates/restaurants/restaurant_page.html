@@ -1,6 +1,90 @@
 {% extends 'restaurants/base.html' %}
 
+{% load static %}
+
 {% block content %}
-    <a href="{% url 'menu' restaurant.pk %}">Меню</a>
-    <a href="{% url 'booking' restaurant.pk %}">Забронировать стол</a>
+    <main class="flex-grow-1 flex-shrink-0">
+        <div class="container-fluid mt-2 pb-2">
+            <div class="row row-cols-xl-2 row-cols-1 g-4 m-auto">
+                <div class="col">
+                    <div class="m-auto">
+                        <div id="carousel" class="carousel slide" data-bs-theme="light">
+                            <div class="carousel-indicators">
+                                <button type="button" data-bs-target="#carousel" data-bs-slide-to="0"
+                                        class="active"></button>
+                                <button type="button" data-bs-target="#carousel"
+                                        data-bs-slide-to="1"></button>
+                                <button type="button" data-bs-target="#carousel"
+                                        data-bs-slide-to="2"></button>
+                            </div>
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="{% static 'img/test/1600x900-test.jpg' %}" class="d-block w-100"
+                                         alt="...">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="{% static 'img/test/1600x900-test.jpg' %}" class="d-block w-100"
+                                         alt="...">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="{% static 'img/test/1600x900-test.jpg' %}" class="d-block w-100"
+                                         alt="...">
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carousel"
+                                    data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carousel"
+                                    data-bs-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="d-flex flex-column justify-content-between h-100 gap-2">
+                        <h1 class="display-6 align-self-center fw-normal">{{ restaurant.name }}</h1>
+                        <span class="lead fw-normal fs-6">{{ restaurant.description }}</span>
+                        <div class="lead fw-normal fs-6">
+                            <span class="fst-italic">Средний чек:</span><br>
+                            <span>{{ restaurant.avg_check|floatformat:0 }} рублей</span>
+                        </div>
+                        <div class="lead fw-normal fs-6">
+                            <span class="fst-italic">Адрес:</span><br>
+                            <span>г. Красноярск, {{ restaurant.address }}</span>
+                        </div>
+                        <div class="lead fw-normal fs-6">
+                            <span class="fst-italic">Контакты:</span><br>
+                            <span class="border-bottom border-black">{{ restaurant.contacts }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="d-flex justify-content-center">
+                        <a class="btn btn-outline-dark" href="{% url 'booking' restaurant.pk %}">Забронировать стол</a>
+                    </div>
+                </div>
+            </div>
+            {% if meals %}
+                <div class="row row-cols-1 g-4 m-auto">
+                    <div class="col">
+                        <h1 class="display-6">Меню</h1>
+                    </div>
+                    <div class="col">
+                        <div class="row row-cols-4 g-4">
+                            {% for meal in meals %}
+                                <div class="col">
+                                    <p>{{ meal.name }}</p>
+                                    <p>{{ meal.price|floatformat:0 }} рублей</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </main>
 {% endblock %}

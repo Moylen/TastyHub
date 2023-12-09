@@ -24,7 +24,7 @@ class Restaurant(models.Model):
     avg_check = models.FloatField(default=0, blank=False, null=False)
     address = models.CharField(max_length=128, blank=False, null=False)
     contacts = models.CharField(max_length=128, blank=False, null=False)
-    description = models.CharField(max_length=512, blank=False, null=False)
+    description = models.TextField(max_length=512, blank=False, null=False)
     logo = models.ImageField(upload_to='restaurant_logos', blank=False, null=False)
     date_create = models.DateTimeField(auto_now_add=True)
     date_edit = models.DateTimeField(auto_now=True)
