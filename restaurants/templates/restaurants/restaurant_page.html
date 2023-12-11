@@ -2,6 +2,8 @@
 
 {% load static %}
 
+{% load bootstrap_icons %}
+
 {% block content %}
     <main class="flex-grow-1 flex-shrink-0">
         <div class="container-fluid mt-2 pb-2">
@@ -47,14 +49,21 @@
                 <div class="col">
                     <div class="d-flex flex-column justify-content-between h-100 gap-2">
                         <h1 class="display-6 align-self-center fw-normal">{{ restaurant.name }}</h1>
-                        <span class="lead fw-normal fs-6">{{ restaurant.description }}</span>
+                        <span class="lead fw-normal fs-6"
+                              style="text-align: justify">{{ restaurant.description }}</span>
                         <div class="lead fw-normal fs-6">
                             <span class="fst-italic">Средний чек:</span><br>
                             <span>{{ restaurant.avg_check|floatformat:0 }} рублей</span>
                         </div>
-                        <div class="lead fw-normal fs-6">
-                            <span class="fst-italic">Адрес:</span><br>
-                            <span>г. Красноярск, {{ restaurant.address }}</span>
+                        <div class="d-flex gap-md-4 gap-2 flex-wrap">
+                            <div class="lead fw-normal fs-6">
+                                <span class="fst-italic">Адрес:</span><br>
+                                <span>г. Красноярск, {{ restaurant.address }}</span>
+                            </div>
+                            <div class="lead fw-normal fs-6">
+                                <span class="fst-italic">Режим работы:</span><br>
+                                <span>{{ restaurant.working_mode }}</span>
+                            </div>
                         </div>
                         <div class="lead fw-normal fs-6">
                             <span class="fst-italic">Контакты:</span><br>
@@ -63,8 +72,9 @@
                     </div>
                 </div>
                 <div class="col">
-                    <div class="d-flex justify-content-center">
+                    <div class="d-flex justify-content-around">
                         <a class="btn btn-outline-dark" href="{% url 'booking' restaurant.pk %}">Забронировать стол</a>
+                        <button onclick="scrollToSection('reviews')" class="btn btn-outline-dark">Отзывы</button>
                     </div>
                 </div>
             </div>
@@ -74,17 +84,109 @@
                         <h1 class="display-6">Меню</h1>
                     </div>
                     <div class="col">
-                        <div class="row row-cols-4 g-4">
+                        <div class="row row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-3">
                             {% for meal in meals %}
                                 <div class="col">
-                                    <p>{{ meal.name }}</p>
-                                    <p>{{ meal.price|floatformat:0 }} рублей</p>
+                                    <div class="card h-100">
+                                        <img src="{% static 'img/test/400x300-test.jpeg' %}" class="card-img-top"
+                                             alt="...">
+                                        <div class="card-body">
+                                            <div class="d-flex flex-column justify-content-between h-100">
+                                                <p class="lead fw-normal fs-6">{{ meal.name }}</p>
+                                                <p class="fst-italic">{{ meal.price|floatformat:0 }} рублей</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             {% endfor %}
                         </div>
                     </div>
                 </div>
             {% endif %}
+
+            <div id="reviews" class="row row-cols-1 mt-4 m-auto">
+                <div class="col">
+                    <h1 class="display-6">Отзывы</h1>
+                </div>
+                <div class="col-lg-5 col-md-6">
+                    <form method="post" enctype="multipart/form-data" action="{% url 'setReview' restaurant.id %}">
+                        {% csrf_token %}
+                        <div class="row row-cols-1 g-1">
+                            <div class="d-flex justify-content-end">
+                                <div class="col-2">
+                                    {{ ReviewForm.mark }}
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    {{ ReviewForm.comment }}
+                                    <label for="{{ ReviewForm.comment.id_for_label }}">Комментарий</label>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-outline-success mt-2">Отправить</button>
+                    </form>
+                </div>
+
+
+                <div class="col-lg-7 col-md-6 mt-md-0 mt-3">
+                    {% if not reviews %}
+                        <div class="d-flex justify-content-center align-items-center">
+                            <span class="lead">Не найдено отзывов.</span>
+                        </div>
+                    {% else %}
+                        {% for review in reviews %}
+                            <div class="col">
+                                <div class="card mb-3">
+                                    <div class="card-body d-flex flex-column">
+                                        <div class="d-flex justify-content-between border-bottom border-secondary pb-3">
+                                            <div>
+                                                {% bs_icon 'person-circle' size='1.5em' %}
+                                                <span>{{ review.author.first_name }}</span>
+                                            </div>
+                                            {{ review.get_mark_display }}
+                                        </div>
+                                        <div class="my-2 lead fw-normal fs-6" style="text-align: justify;">
+                                            {{ review.comment }}
+                                        </div>
+                                        <div class="d-flex justify-content-between fst-italic">
+                                            {{ review.date_create|date:"d.m.Y H:i" }}
+                                            {% if review.author == user %}
+                                                <a href="{% url 'delReview' review.id %}">{% bs_icon 'trash' color='black' %}</a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="errorToasts">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="position-fixed bottom-0 start-0 p-3">
+                            <div id="myToast" class="toast hide" role="alert" aria-live="assertive"
+                                 aria-atomic="true"
+                                 data-bs-autohide="false">
+                                <div class="d-flex">
+                                    <div class="toast-body">
+                                        <span>{% bs_icon 'exclamation-triangle' color='orange' extra_classes='me-1' %} {{ message }}</span>
+                                    </div>
+                                    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"
+                                            aria-label="Close"></button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
         </div>
     </main>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'js/toastOnLoad.js' %}"></script>
+    <script src="{% static 'js/scrollToSection.js' %}"></script>
 {% endblock %}

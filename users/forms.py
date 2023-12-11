@@ -58,10 +58,10 @@ class UserLoginForm(AuthenticationForm):
 
 
 class UserEditForm(forms.ModelForm):
-    password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Пароль'}), required=False)
-    confirm_password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Повтор пароля'}), required=False)
+    # password = forms.CharField(
+    #     widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Пароль'}), required=False)
+    # confirm_password = forms.CharField(
+    #     widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Повтор пароля'}), required=False)
 
     class Meta:
         model = User
@@ -72,13 +72,13 @@ class UserEditForm(forms.ModelForm):
                 attrs={'class': 'form-control', 'placeholder': 'Эл. почта'})
         }
 
-    def clean(self):
-        cleaned_data = super().clean()
-        password = cleaned_data.get("password")
-        confirm_password = cleaned_data.get("confirm_password")
-        if password != confirm_password:
-            raise forms.ValidationError("Пароли не совпадают")
-        return cleaned_data
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     password = cleaned_data.get("password")
+    #     confirm_password = cleaned_data.get("confirm_password")
+    #     if password != confirm_password:
+    #         raise forms.ValidationError("Пароли не совпадают")
+    #     return cleaned_data
 
     def clean_username(self):
         new_username = self.cleaned_data['username']
@@ -87,3 +87,38 @@ class UserEditForm(forms.ModelForm):
                 username=new_username).exists():
             raise forms.ValidationError("Электронная почта уже используется")
         return new_username
+
+
+class UserPassForm(forms.ModelForm):
+    old_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Старый пароль'}),
+        required=True
+    )
+
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Новый пароль'}),
+        required=True
+    )
+
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Подтверждение пароля'}),
+        required=True
+    )
+
+    class Meta:
+        model = User
+        fields = []
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        old_password = cleaned_data.get("old_password")
+        user = User.objects.get(pk=self.instance.pk)
+        if not user.check_password(old_password):
+            raise forms.ValidationError("Пароли не совпадают")
+
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+        if password != confirm_password:
+            raise forms.ValidationError("Пароли не совпадают")
+        return cleaned_data

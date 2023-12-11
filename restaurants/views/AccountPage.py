@@ -1,11 +1,11 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 
 from restaurants.models import Restaurant, RestaurantPlace
-from users.forms import UserEditForm
+from users.forms import UserEditForm, UserPassForm
 
 
 class AccountPage(LoginRequiredMixin, View):
@@ -22,24 +22,39 @@ class AccountPage(LoginRequiredMixin, View):
 
         context = {
             'user_places': user_places,
-            'UserEditForm': UserEditForm(instance=request.user)
+            'UserEditForm': UserEditForm(instance=request.user),
+            'UserPassForm': UserPassForm(instance=request.user)
         }
         return render(request, 'restaurants/account_page.html', context)
 
     @staticmethod
     def post(request):
-        form = UserEditForm(request.POST, instance=request.user)
-        if not form.is_valid():
-            return render(request, 'restaurants/account_page.html', {'UserEditForm': form})
 
-        user = form.save(commit=False)
-        password = form.cleaned_data.get('password')
-        if password:
-            user.set_password(password)
-        user.save()
+        if 'UserEditForm' in request.POST:
+            edit_form = UserEditForm(request.POST, instance=request.user)
+            if edit_form.is_valid():
+                edit_form.save(commit=True)
+                return redirect('account')
+            else:
+                context = {
+                    'UserEditForm': edit_form,
+                    'UserPassForm': UserPassForm()
+                }
+                return render(request, 'restaurants/account_page.html', context)
 
-        updated_user = authenticate(username=user.username, password=password)
-        if updated_user is not None:
-            login(request, updated_user)
+        if 'UserPassForm' in request.POST:
+            pass_form = UserPassForm(request.POST, instance=request.user)
+            if pass_form.is_valid():
+                user = pass_form.save(commit=False)
+                password = pass_form.cleaned_data.get('password')
+                user.set_password(password)
+                user.save()
+                return redirect('account')
+            else:
+                context = {
+                    'UserEditForm': UserEditForm(instance=request.user),
+                    'UserPassForm': pass_form
+                }
+                return render(request, 'restaurants/account_page.html', context)
 
         return redirect('account')

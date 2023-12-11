@@ -25,6 +25,7 @@ class Restaurant(models.Model):
     address = models.CharField(max_length=128, blank=False, null=False)
     contacts = models.CharField(max_length=128, blank=False, null=False)
     description = models.TextField(max_length=512, blank=False, null=False)
+    working_mode = models.TextField(max_length=64, blank=False, null=False)
     logo = models.ImageField(upload_to='restaurant_logos', blank=False, null=False)
     date_create = models.DateTimeField(auto_now_add=True)
     date_edit = models.DateTimeField(auto_now=True)
@@ -80,16 +81,23 @@ class RestaurantPlace(models.Model):
 class RestaurantReview(models.Model):
     # Возможные оценки ресторана
     marks = [
-        ('1', 1), ('2', 2), ('3', 3), ('4', 4), ('5', 5)
+        (1, '\u2605'),
+        (2, '\u2605\u2605'),
+        (3, '\u2605\u2605\u2605'),
+        (4, '\u2605\u2605\u2605\u2605'),
+        (5, '\u2605\u2605\u2605\u2605\u2605')
     ]
 
     mark = models.IntegerField(choices=marks, blank=False, null=False)
-    comment = models.TextField(max_length=1024, blank=False, null=False)
+    comment = models.TextField(max_length=1024, blank=True, null=False)
     date_create = models.DateTimeField(auto_now_add=True)
     date_edit = models.DateTimeField(auto_now=True)
 
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.author}'
 
 
 class RestaurantImage(models.Model):
@@ -104,6 +112,9 @@ class RestaurantMeal(models.Model):
     date_create = models.DateTimeField(auto_now_add=True)
 
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.restaurant.name}'
 
 
 class MealImage(models.Model):

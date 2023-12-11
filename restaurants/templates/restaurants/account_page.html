@@ -33,44 +33,86 @@
                     {% endif %}
                 </div>
                 <div class="col order-xl-1">
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
+                    <div class="row row-cols-1 g-4">
+                        <div class="col">
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
 
-                        <div class="mb-3">
-                            <h3 class="display-6">Смена данных</h3>
-                        </div>
+                                <div class="mb-3">
+                                    <h3 class="display-6">Смена данных</h3>
+                                </div>
 
-                        {% if UserEditForm.errors %}
-                            <div class="alert alert-danger d-flex justify-content-center" role="alert">
-                                {% for field in UserEditForm %}
-                                    {% for error in field.errors %}
-                                        {{ error }}<br>
-                                    {% endfor %}
-                                {% endfor %}
+                                {% if UserEditForm.errors %}
+                                    <div class="alert alert-danger d-flex justify-content-center" role="alert">
+                                        {% for field in UserEditForm %}
+                                            {% for error in field.errors %}
+                                                {{ error }}<br>
+                                            {% endfor %}
+                                        {% endfor %}
 
-                                {% for error in UserEditForm.non_field_errors %}
-                                    {{ error }}<br>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
+                                        {% for error in UserEditForm.non_field_errors %}
+                                            {{ error }}<br>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
 
-                        <div class="form-group mb-3">
-                            {{ UserEditForm.first_name }}
+                                <div class="form-floating mb-3">
+                                    {{ UserEditForm.first_name }}
+                                    <label for="{{ UserEditForm.first_name.id_for_label }}">Имя</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    {{ UserEditForm.username }}
+                                    <label for="{{ UserEditForm.username.id_for_label }}">Почта</label>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <button class="btn btn-outline-success me-2" type="submit" name="UserEditForm">
+                                        Сохранить
+                                    </button>
+                                    <a class="btn btn-outline-danger" href="{% url 'logout' %}">Выйти из аккаунта</a>
+                                </div>
+                            </form>
                         </div>
-                        <div class="form-group mb-3">
-                            {{ UserEditForm.username }}
+                        <div class="col">
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+
+                                <div class="mb-3">
+                                    <h3 class="display-6">Смена пароля</h3>
+                                </div>
+
+                                {% if UserPassForm.errors %}
+                                    <div class="alert alert-danger d-flex justify-content-center" role="alert">
+                                        {% for field in UserPassForm %}
+                                            {% for error in field.errors %}
+                                                {{ error }}<br>
+                                            {% endfor %}
+                                        {% endfor %}
+
+                                        {% for error in UserPassForm.non_field_errors %}
+                                            {{ error }}<br>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                                <div class="form-floating mb-3">
+                                    {{ UserPassForm.old_password }}
+                                    <label for="{{ UserPassForm.old_password.id_for_label }}">Старый пароль</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    {{ UserPassForm.password }}
+                                    <label for="{{ UserPassForm.password.id_for_label }}">Новый пароль</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    {{ UserPassForm.confirm_password }}
+                                    <label for="{{ UserPassForm.confirm_password.id_for_label }}">Подтверждение
+                                        пароля</label>
+                                </div>
+                                <button class="btn btn-outline-success me-2" type="submit" name="UserPassForm">
+                                    Сохранить
+                                </button>
+                            </form>
                         </div>
-                        <div class="form-group mb-3">
-                            {{ UserEditForm.password }}
-                        </div>
-                        <div class="form-group mb-3">
-                            {{ UserEditForm.confirm_password }}
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <button class="btn btn-outline-success me-2" type="submit">Сохранить</button>
-                            <a class="btn btn-outline-danger" href="{% url 'logout' %}">Выйти из аккаунта</a>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>

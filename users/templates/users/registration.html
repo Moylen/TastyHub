@@ -23,17 +23,21 @@
             {% endif %}
             {# End error handling #}
 
-            <div class="form-group mb-3">
+            <div class="form-floating mb-3">
                 {{ form.first_name }}
+                <label for="{{ form.first_name.id_for_label }}">Имя</label>
             </div>
-            <div class="form-group mb-3">
+            <div class="form-floating mb-3">
                 {{ form.email }}
+                <label for="{{ form.email.id_for_label }}">Почта</label>
             </div>
-            <div class="form-group mb-3">
+            <div class="form-floating mb-3">
                 {{ form.password1 }}
+                <label for="{{ form.password1.id_for_label }}">Пароль</label>
             </div>
-            <div class="form-group mb-3">
+            <div class="form-floating mb-3">
                 {{ form.password2 }}
+                <label for="{{ form.password2.id_for_label }}">Повтор пароля</label>
             </div>
             <div class="mb-3">
                 <button class="btn btn-outline-dark w-100" type="submit">Зарегистрироваться</button>

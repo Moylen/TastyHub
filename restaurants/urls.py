@@ -1,5 +1,6 @@
 from django.urls import path
 
+from .views.DeleteReview import DeleteReview
 from .views.SetAllFree import SetAllFree
 from .views.SetBookedOccupied import SetBookedOccupied
 from .views.SetOccupiedFree import SetOccupiedFree
@@ -9,16 +10,17 @@ from .views.Reserve import Reserve
 from .views.SetBookedFree import SetBookedFree
 from .views.RestaurantBookingPage import RestaurantBookingPage
 from .views.RestaurantManagePage import RestaurantManagePage
-from .views.RestaurantMenuPage import RestaurantMenuPage
 from .views.RestaurantPage import RestaurantPage
+from .views.SetReview import SetReview
 
 urlpatterns = [
     path('', Index.as_view(), name='index'),
 
     path('restaurant/booking/<int:pk>', RestaurantBookingPage.as_view(), name='booking'),
     path('restaurant/<int:pk>', RestaurantPage.as_view(), name='restaurant'),
-    path('restaurant/menu/<int:pk>', RestaurantMenuPage.as_view(), name='menu'),
     path('restaurant/manage', RestaurantManagePage.as_view(), name='manage'),
+    path('restaurant/review/<int:pk>', SetReview.as_view(), name='setReview'),
+    path('review/delete/<int:pk>', DeleteReview.as_view(), name='delReview'),
 
     path('account', AccountPage.as_view(), name='account'),
 

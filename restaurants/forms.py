@@ -1,5 +1,5 @@
 from django import forms
-from .models import KitchenType, RestaurantPlace
+from .models import KitchenType, RestaurantPlace, RestaurantReview
 
 
 class FilterForm(forms.Form):
@@ -19,3 +19,14 @@ class BookingForm(forms.ModelForm):
     class Meta:
         model = RestaurantPlace
         fields = ['booked_on', ]
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = RestaurantReview
+        fields = ['mark', 'comment']
+        widgets = {
+            'mark': forms.Select(attrs={'class': 'form-control'}),
+            'comment': forms.Textarea(
+                attrs={'class': 'form-control', 'placeholder': 'text', 'style': 'min-height: 150px;'})
+        }

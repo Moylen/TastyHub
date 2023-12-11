@@ -1,10 +1,14 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django.views import View
 
 from restaurants.models import Restaurant, RestaurantPlace
 
 
-class RestaurantManagePage(View):
+class RestaurantManagePage(LoginRequiredMixin, View):
+    login_url = reverse_lazy('login')
+
     @staticmethod
     def get(request):
         restaurant = Restaurant.objects.get(admin_user=request.user)
