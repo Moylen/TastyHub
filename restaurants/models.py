@@ -105,19 +105,17 @@ class RestaurantImage(models.Model):
 
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f'{self.restaurant.name}'
+
 
 class RestaurantMeal(models.Model):
     name = models.CharField(max_length=128, blank=False, null=False)
     price = models.FloatField(blank=False, null=False)
+    image = models.ImageField(upload_to='meal_images/%Y/%m/%d/', blank=True, null=True)
     date_create = models.DateTimeField(auto_now_add=True)
 
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.restaurant.name}'
-
-
-class MealImage(models.Model):
-    image = models.ImageField(upload_to='meal_images/%Y/%m/%d/', blank=False, null=False)
-
-    restaurant_meal = models.ForeignKey(RestaurantMeal, on_delete=models.CASCADE)
+        return f'{self.restaurant.name} | {self.name}'

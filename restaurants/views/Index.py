@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views import View
 
 from restaurants.forms import FilterForm
-from restaurants.models import Restaurant
+from restaurants.models import Restaurant, RestaurantImage
 
 
 class Index(View):
